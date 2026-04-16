@@ -1,11 +1,41 @@
 @import 'tailwindcss';
 
+@import './fonts.css';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+@import 'swiper/css/bundle';
+
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Montserrat', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-philosopher: 'Philosopher', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    --font-tinos: 'Tinos', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+@layer base {
+    body {
+        @apply bg-[#F8F9FA] antialiased;
+        font-family: var(--font-sans);
+    }
+    
+    [x-cloak] {
+        display: none !important;
+    }
+}
+
+@layer utilities {
+    .mobile-container {
+        @apply max-w-[480px] mx-auto bg-white min-h-screen relative overflow-x-hidden;
+        box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    }
+
+    .text-primary { color: var(--primary-color); }
+    .bg-primary { background-color: var(--primary-color); }
+    .border-primary { border-color: var(--primary-color); }
+
+    .bni-red { color: #CC0000; }
+    .bni-dark { color: #333333; }
 }
