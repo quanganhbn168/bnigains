@@ -41,6 +41,10 @@ class GainsProfileForm
                                     ->label('Ảnh Banner (Bìa trên cùng)')
                                     ->image()
                                     ->imageEditor()
+                                    ->imageEditorAspectRatios([
+                                        '9:16',
+                                    ])
+                                    ->helperText('Ảnh sẽ được xử lý theo tỷ lệ dọc 9:16 khi chỉnh sửa.')
                                     ->required()
                                     ->minFiles(1)
                                     ->maxFiles(1)
@@ -51,6 +55,10 @@ class GainsProfileForm
                                     ->label('Ảnh chân dung')
                                     ->image()
                                     ->imageEditor()
+                                    ->imageEditorAspectRatios([
+                                        '9:16',
+                                    ])
+                                    ->helperText('Ảnh sẽ được xử lý theo tỷ lệ dọc 9:16 khi chỉnh sửa.')
                                     ->maxFiles(1)
                                     ->panelLayout('grid'),
                                 SpatieMediaLibraryFileUpload::make('personal_photos')
