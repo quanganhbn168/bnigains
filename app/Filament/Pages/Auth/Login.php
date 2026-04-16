@@ -24,10 +24,12 @@ class Login extends BaseLogin
     protected function getCredentialsFromFormData(#[SensitiveParameter] array $data): array
     {
         $login = trim((string) ($data['login'] ?? ''));
+        $password = (string) ($data['password'] ?? '');
+        $normalizedLogin = strtolower($login);
 
-        // Tìm user theo username hoặc email trước
-        $user = User::where('username', $login)
-            ->orWhere('email', $login)
+        // Tìm user theo username hoặc email trước (không phân biệt hoa thường)
+        $user = User::whereRaw('LOWER(username) = ?', [$normalizedLogin])
+            ->orWhereRaw('LOWER(email) = ?', [$normalizedLogin])
             ->orWhere('phone', $login)
             ->first();
 
@@ -43,16 +45,38 @@ class Login extends BaseLogin
         }
 
         if ($user) {
+            if (!empty($user->email) && strtolower((string) $user->email) === $normalizedLogin) {
+                return [
+                    'email' => $user->email,
+                    'password' => $password,
+                ];
+            }
+
+            if (!empty($user->username) && strtolower((string) $user->username) === $normalizedLogin) {
+                return [
+                    'username' => $user->username,
+                    'password' => $password,
+                ];
+            }
+
+            if (!empty($user->phone) && (string) $user->phone === $login) {
+                return [
+                    'phone' => $user->phone,
+                    'password' => $password,
+                ];
+            }
+
             return [
-                'id' => $user->getAuthIdentifier(),
-                'password' => $data['password'],
+                // fallback cuối: ưu tiên email nếu có
+                'email' => $user->email ?: $login,
+                'password' => $password,
             ];
         }
 
         return [
             // fallback: vẫn cho phép thử theo email như flow mặc định
             'email' => $login,
-            'password' => $data['password'],
+            'password' => $password,
         ];
     }
 
