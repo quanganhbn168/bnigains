@@ -71,4 +71,9 @@ class GainsProfile extends Model implements HasMedia
     {
         return route('profile.show.by-token', ['qrToken' => $this->qr_token]);
     }
+
+    public function getPublicUrlAttribute(): string
+    {
+        return route('profile.show', ['slug' => $this->slug]);
+    }
 }

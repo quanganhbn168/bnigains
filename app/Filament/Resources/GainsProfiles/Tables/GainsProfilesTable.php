@@ -42,10 +42,16 @@ class GainsProfilesTable
                     ->color(fn (bool $state): string => $state ? 'success' : 'gray'),
                 TextColumn::make('slug')
                     ->label('Link Public')
-                    ->url(fn ($record) => url('/p/' . $record->slug))
+                    ->url(fn ($record) => $record->public_url)
                     ->openUrlInNewTab()
                     ->color('primary')
                     ->searchable(),
+                TextColumn::make('qr_token')
+                    ->label('QR')
+                    ->html()
+                    ->formatStateUsing(fn ($state, $record): string => QrCode::size(56)->margin(1)->generate($record->public_url))
+                    ->tooltip('QR link public')
+                    ->toggleable(),
                 TextColumn::make('company_name')
                     ->label('Công ty')
                     ->searchable(),
@@ -69,13 +75,13 @@ class GainsProfilesTable
                     ->label('QR')
                     ->icon('heroicon-o-qr-code')
                     ->color('success')
-                    ->modalHeading('QR vĩnh viễn')
+                    ->modalHeading('QR Link Public')
                     ->modalSubmitAction(false)
                     ->modalCancelActionLabel('Đóng')
                     ->modalContent(fn ($record): HtmlString => new HtmlString(
                         '<div class="flex flex-col items-center gap-3">'
-                        . QrCode::size(280)->margin(1)->generate($record->permanent_url)
-                        . '<p class="text-sm text-gray-600 break-all text-center">' . e($record->permanent_url) . '</p>'
+                        . QrCode::size(280)->margin(1)->generate($record->public_url)
+                        . '<p class="text-sm text-gray-600 break-all text-center">' . e($record->public_url) . '</p>'
                         . '</div>'
                     )),
                 EditAction::make(),

@@ -37,7 +37,7 @@ class UsersTable
                 TextColumn::make('gainsProfile.slug')
                     ->label('Link profile')
                     ->placeholder('-')
-                    ->url(fn ($record) => $record->gainsProfile?->slug ? url('/p/' . $record->gainsProfile->slug) : null)
+                    ->url(fn ($record) => $record->gainsProfile?->public_url)
                     ->openUrlInNewTab()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('roles.name')
@@ -58,13 +58,13 @@ class UsersTable
                     ->icon('heroicon-o-qr-code')
                     ->color('success')
                     ->visible(fn ($record): bool => filled($record->gainsProfile?->qr_token))
-                    ->modalHeading('QR vĩnh viễn')
+                    ->modalHeading('QR Link Public')
                     ->modalSubmitAction(false)
                     ->modalCancelActionLabel('Đóng')
                     ->modalContent(fn ($record): HtmlString => new HtmlString(
                         '<div class="flex flex-col items-center gap-3">'
-                        . QrCode::size(280)->margin(1)->generate($record->gainsProfile->permanent_url)
-                        . '<p class="text-sm text-gray-600 break-all text-center">' . e($record->gainsProfile->permanent_url) . '</p>'
+                        . QrCode::size(280)->margin(1)->generate($record->gainsProfile->public_url)
+                        . '<p class="text-sm text-gray-600 break-all text-center">' . e($record->gainsProfile->public_url) . '</p>'
                         . '</div>'
                     )),
                 EditAction::make(),
