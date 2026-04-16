@@ -25,6 +25,9 @@ class GainsProfileForm
                                 TextInput::make('full_name')
                                     ->label('Họ và tên (hiển thị trên thẻ)')
                                     ->required()->columnSpanFull(),
+                                TextInput::make('education')
+                                    ->label('Học vấn')
+                                    ->placeholder('VD: Đại học Kinh tế Quốc dân'),
                                 TextInput::make('bni_position')
                                     ->label('Chức vụ BNI')
                                     ->placeholder('VD: Chủ tịch NK20'),

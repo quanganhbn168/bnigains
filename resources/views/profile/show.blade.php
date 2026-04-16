@@ -237,7 +237,12 @@
                 <!-- Content Personal -->
                 <div class="space-y-3.5 text-[18px] text-gray-900 leading-relaxed font-tinos px-6">
                     <p><span class="font-bold mr-1">Họ tên:</span> {{ mb_strtoupper($profile->full_name) }}</p>
-                    <p><span class="font-bold mr-1">Ngày sinh:</span> {{ $profile->dob }}</p>
+                    @if($profile->education)
+                        <p><span class="font-bold mr-1">Học vấn:</span> {{ $profile->education }}</p>
+                    @endif
+                    @if($profile->dob)
+                        <p><span class="font-bold mr-1">Ngày sinh:</span> {{ $profile->dob }}</p>
+                    @endif
 
 
                     <p><span class="font-bold mr-1">Địa chỉ hiện tại:</span> <span
@@ -249,13 +254,7 @@
                     @endif
 
                     <div class="pt-1">
-                        <p class="font-bold">Điện thoại:</p>
-                        <div class="mt-1.5 ml-4 space-y-1">
-                            <div class="flex items-center gap-2">
-                                <div class="w-1 h-1 rounded-sm bg-gray-500"></div>
-                                <span class="tracking-wide">{{ $profile->phone_personal }}</span>
-                            </div>
-                        </div>
+                        <p class="font-bold">Điện thoại: <span class="tracking-wide">{{ $profile->phone_personal }}</span></p>
                     </div>
                 </div>
 
@@ -295,22 +294,7 @@
             </div>
 
             @if($hasBusinessSection)
-                @if(!empty($businessPhotoUrls))
-                    <!-- ALBUM DOANH NGHIỆP -->
-                    <div class="w-full max-w-[440px] mx-auto mb-8">
-                        <div class="flex justify-center mb-4">
-                            <x-profile.badge>ALBUM DOANH NGHIỆP</x-profile.badge>
-                        </div>
 
-                        <swiper-container pagination="true" pagination-clickable="true" loop="true" autoplay-delay="2500" class="w-full">
-                            @foreach($businessPhotoUrls as $idx => $photoUrl)
-                                <swiper-slide>
-                                    <img src="{{ $photoUrl }}" class="w-full aspect-[4/3] object-cover" alt="Ảnh doanh nghiệp {{ $idx + 1 }}">
-                                </swiper-slide>
-                            @endforeach
-                        </swiper-container>
-                    </div>
-                @endif
 
                 <!-- THÔNG TIN DOANH NGHIỆP CARD -->
                 <div id="thong-tin-doanh-nghiep" class="relative w-full max-w-[440px] mx-auto bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] pt-10 pb-10 border border-white/60 mb-8 overflow-hidden">
@@ -339,6 +323,22 @@
                         </div>
                     @endif
                 </div>
+                @if(!empty($businessPhotoUrls))
+                <!-- ALBUM DOANH NGHIỆP -->
+                <div class="w-full max-w-[440px] mx-auto mb-8">
+                    <div class="flex justify-center mb-4">
+                        <x-profile.badge>ALBUM DOANH NGHIỆP</x-profile.badge>
+                    </div>
+
+                    <swiper-container pagination="true" pagination-clickable="true" loop="true" autoplay-delay="2500" class="w-full">
+                        @foreach($businessPhotoUrls as $idx => $photoUrl)
+                            <swiper-slide>
+                                <img src="{{ $photoUrl }}" class="w-full aspect-[4/3] object-cover" alt="Ảnh doanh nghiệp {{ $idx + 1 }}">
+                            </swiper-slide>
+                        @endforeach
+                    </swiper-container>
+                </div>
+            @endif
                 </div>
 
                 <!-- SWIPER SLIDER ẢNH ĐƠN -->

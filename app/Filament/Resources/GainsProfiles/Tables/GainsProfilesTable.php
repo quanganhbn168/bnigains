@@ -46,12 +46,6 @@ class GainsProfilesTable
                     ->openUrlInNewTab()
                     ->color('primary')
                     ->searchable(),
-                TextColumn::make('qr_token')
-                    ->label('QR')
-                    ->html()
-                    ->formatStateUsing(fn ($state, $record): string => QrCode::size(56)->margin(1)->generate($record->public_url))
-                    ->tooltip('QR link public')
-                    ->toggleable(),
                 TextColumn::make('company_name')
                     ->label('Công ty')
                     ->searchable(),
