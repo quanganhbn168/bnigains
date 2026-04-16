@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\User;
 use Illuminate\Foundation\Auth\User as AuthUser;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -23,9 +24,9 @@ class UserPolicy
         return $authUser->can('ViewAny:User');
     }
 
-    public function view(AuthUser $authUser): bool
+    public function view(AuthUser $authUser, User $user): bool
     {
-        return $authUser->can('View:User');
+        return $authUser->can('View:User') || (int) $authUser->getAuthIdentifier() === (int) $user->getKey();
     }
 
     public function create(AuthUser $authUser): bool
@@ -33,12 +34,12 @@ class UserPolicy
         return $authUser->can('Create:User');
     }
 
-    public function update(AuthUser $authUser): bool
+    public function update(AuthUser $authUser, User $user): bool
     {
-        return $authUser->can('Update:User');
+        return $authUser->can('Update:User') || (int) $authUser->getAuthIdentifier() === (int) $user->getKey();
     }
 
-    public function delete(AuthUser $authUser): bool
+    public function delete(AuthUser $authUser, User $user): bool
     {
         return $authUser->can('Delete:User');
     }

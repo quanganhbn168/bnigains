@@ -14,6 +14,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
 class UserResource extends Resource
@@ -46,12 +47,12 @@ class UserResource extends Resource
 
     public static function shouldRegisterNavigation(): bool
     {
-        return static::canManageUsers();
+        return Auth::check();
     }
 
     public static function canViewAny(): bool
     {
-        return static::canManageUsers();
+        return Auth::check();
     }
 
     public static function canCreate(): bool
@@ -61,7 +62,14 @@ class UserResource extends Resource
 
     public static function canEdit($record): bool
     {
-        return static::canManageUsers();
+        /** @var User|null $authUser */
+        $authUser = Auth::user();
+
+        if (!$authUser) {
+            return false;
+        }
+
+        return static::canManageUsers() || (int) $record->getKey() === (int) $authUser->getKey();
     }
 
     public static function canDelete($record): bool
@@ -72,6 +80,23 @@ class UserResource extends Resource
     public static function canDeleteAny(): bool
     {
         return static::canManageUsers();
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        /** @var User|null $authUser */
+        $authUser = Auth::user();
+        if (!$authUser) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        if (static::canManageUsers()) {
+            return $query;
+        }
+
+        return $query->whereKey($authUser->getKey());
     }
 
     public static function form(Schema $schema): Schema
