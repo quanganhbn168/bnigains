@@ -2,10 +2,9 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
-use App\Models\GainsProfile;
-use App\Models\User;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
 class UserForm
@@ -46,34 +45,30 @@ class UserForm
                             ->columnSpan(6),
                     ])->columns(12),
 
-                Section::make('Phân quyền & Liên kết hồ sơ')
-                    ->description('Admin có thể gán user vào một hồ sơ GAINS để đồng bộ quản trị dễ hơn.')
+                Section::make('Phân quyền')
                     ->schema([
                         Select::make('roles')
                             ->label('Vai trò hệ thống')
                             ->relationship('roles', 'name')
                             ->multiple()
                             ->preload()
+                            ->columnSpanFull(),
+                    ])->columns(12),
+
+                Section::make('Hồ sơ GAINS cơ bản')
+                    ->description('Hồ sơ sẽ được tạo/sync tự động theo user (mỗi user chỉ có 1 profile).')
+                    ->schema([
+                        TextInput::make('profile_full_name')
+                            ->label('Tên hiển thị profile')
+                            ->required()
                             ->columnSpan(6),
-                        Select::make('gains_profile_id')
-                            ->label('Hồ sơ GAINS liên kết')
-                            ->searchable()
-                            ->preload()
-                            ->options(fn (?User $record) => GainsProfile::query()
-                                ->when(
-                                    $record,
-                                    fn ($query) => $query->where(fn ($innerQuery) => $innerQuery
-                                        ->whereNull('user_id')
-                                        ->orWhere('user_id', $record->getKey())),
-                                    fn ($query) => $query->whereNull('user_id')
-                                )
-                                ->orderByRaw('COALESCE(full_name, company_name, slug) ASC')
-                                ->get()
-                                ->mapWithKeys(fn (GainsProfile $profile) => [
-                                    $profile->getKey() => $profile->full_name ?: ($profile->company_name ?: $profile->slug),
-                                ])
-                                ->toArray())
-                            ->helperText('Mỗi hồ sơ GAINS chỉ nên liên kết với 1 tài khoản user.')
+                        TextInput::make('profile_chapter_name')
+                            ->label('Tên chapter')
+                            ->columnSpan(6),
+                        Toggle::make('profile_is_public')
+                            ->label('Cho phép hiển thị public')
+                            ->default(true)
+                            ->inline(false)
                             ->columnSpan(6),
                     ])->columns(12),
             ]);

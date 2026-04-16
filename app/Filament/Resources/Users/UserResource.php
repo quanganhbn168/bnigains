@@ -32,43 +32,46 @@ class UserResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static function isSuperAdmin(): bool
+    protected static function canManageUsers(): bool
     {
         /** @var User|null $user */
         $user = Auth::user();
 
-        return $user
-            && $user->hasRole('super_admin');
+        if (!$user) {
+            return false;
+        }
+
+        return $user->hasRole('super_admin') || $user->hasRole('admin');
     }
 
     public static function shouldRegisterNavigation(): bool
     {
-        return static::isSuperAdmin();
+        return static::canManageUsers();
     }
 
     public static function canViewAny(): bool
     {
-        return static::isSuperAdmin();
+        return static::canManageUsers();
     }
 
     public static function canCreate(): bool
     {
-        return static::isSuperAdmin();
+        return static::canManageUsers();
     }
 
     public static function canEdit($record): bool
     {
-        return static::isSuperAdmin();
+        return static::canManageUsers();
     }
 
     public static function canDelete($record): bool
     {
-        return static::isSuperAdmin();
+        return static::canManageUsers();
     }
 
     public static function canDeleteAny(): bool
     {
-        return static::isSuperAdmin();
+        return static::canManageUsers();
     }
 
     public static function form(Schema $schema): Schema

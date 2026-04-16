@@ -16,6 +16,7 @@ class GainsProfile extends Model implements HasMedia
 
     protected $casts = [
         'social_links' => 'array',
+        'is_public' => 'boolean',
     ];
 
     protected static function booted(): void

@@ -9,7 +9,9 @@ class GainsProfileController extends Controller
 {
     public function show($slug)
     {
-        $profile = GainsProfile::where('slug', $slug)->firstOrFail();
+        $profile = GainsProfile::where('slug', $slug)
+            ->where('is_public', true)
+            ->firstOrFail();
 
         return view('profile.show', compact('profile'));
     }

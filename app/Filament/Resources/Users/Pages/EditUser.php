@@ -11,7 +11,7 @@ class EditUser extends EditRecord
 {
     protected static string $resource = UserResource::class;
 
-    protected ?int $selectedGainsProfileId = null;
+    protected array $profileData = [];
 
     protected function getHeaderActions(): array
     {
@@ -22,33 +22,32 @@ class EditUser extends EditRecord
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
-        $data['gains_profile_id'] = $this->record->gainsProfile?->getKey();
+        $profile = $this->record->gainsProfile;
+        $data['profile_full_name'] = $profile?->full_name ?? $data['name'] ?? '';
+        $data['profile_chapter_name'] = $profile?->chapter_name;
+        $data['profile_is_public'] = $profile?->is_public ?? true;
 
         return $data;
     }
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        $this->selectedGainsProfileId = isset($data['gains_profile_id']) ? (int) $data['gains_profile_id'] : null;
+        $this->profileData = [
+            'full_name' => $data['profile_full_name'] ?? $data['name'] ?? null,
+            'chapter_name' => $data['profile_chapter_name'] ?? null,
+            'is_public' => (bool) ($data['profile_is_public'] ?? true),
+        ];
 
-        unset($data['gains_profile_id']);
+        unset($data['profile_full_name'], $data['profile_chapter_name'], $data['profile_is_public']);
 
         return $data;
     }
 
     protected function afterSave(): void
     {
-        GainsProfile::query()
-            ->where('user_id', $this->record->getKey())
-            ->when($this->selectedGainsProfileId, fn ($query) => $query->whereKeyNot($this->selectedGainsProfileId))
-            ->update(['user_id' => null]);
-
-        if (!$this->selectedGainsProfileId) {
-            return;
-        }
-
-        GainsProfile::whereKey($this->selectedGainsProfileId)->update([
-            'user_id' => $this->record->getKey(),
-        ]);
+        GainsProfile::updateOrCreate(
+            ['user_id' => $this->record->getKey()],
+            $this->profileData
+        );
     }
 }

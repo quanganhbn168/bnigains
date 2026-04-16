@@ -6,6 +6,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -30,6 +31,10 @@ class GainsProfileForm
                                 TextInput::make('chapter_name')
                                     ->label('Tên Chapter')
                                     ->placeholder('VD: BNI Power Chapter - HN2'),
+                                Toggle::make('is_public')
+                                    ->label('Cho phép hiển thị public')
+                                    ->default(true)
+                                    ->inline(false),
 
                                 SpatieMediaLibraryFileUpload::make('banner')
                                     ->collection('banner')

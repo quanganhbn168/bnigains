@@ -24,28 +24,31 @@ class GainsProfileResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'full_name';
 
-    protected static function isSuperAdmin(): bool
+    protected static function canManageAllProfiles(): bool
     {
         /** @var \App\Models\User|null $user */
         $user = Auth::user();
 
-        return $user
-            && $user->hasRole('super_admin');
+        if (!$user) {
+            return false;
+        }
+
+        return $user->hasRole('super_admin') || $user->hasRole('admin');
     }
 
     public static function canCreate(): bool
     {
-        return static::isSuperAdmin();
+        return static::canManageAllProfiles();
     }
 
     public static function canDelete($record): bool
     {
-        return static::isSuperAdmin();
+        return static::canManageAllProfiles();
     }
 
     public static function canDeleteAny(): bool
     {
-        return static::isSuperAdmin();
+        return static::canManageAllProfiles();
     }
 
     public static function getEloquentQuery(): Builder
@@ -58,7 +61,7 @@ class GainsProfileResource extends Resource
         }
 
         /** @var \App\Models\User $user */
-        if ($user->hasRole('super_admin')) {
+        if (static::canManageAllProfiles()) {
             return $query;
         }
 

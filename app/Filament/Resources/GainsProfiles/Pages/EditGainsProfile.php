@@ -22,7 +22,7 @@ class EditGainsProfile extends EditRecord
             abort(403);
         }
 
-        if ($user->hasRole('super_admin')) {
+        if ($user->hasRole('super_admin') || $user->hasRole('admin')) {
             return;
         }
 
@@ -33,12 +33,8 @@ class EditGainsProfile extends EditRecord
 
     protected function getHeaderActions(): array
     {
-        /** @var \App\Models\User|null $user */
-        $user = Auth::user();
-
         return [
-            DeleteAction::make()
-                ->visible($user?->hasRole('super_admin') === true),
+            DeleteAction::make(),
         ];
     }
 

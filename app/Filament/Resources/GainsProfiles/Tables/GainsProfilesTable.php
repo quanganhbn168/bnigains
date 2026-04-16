@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\GainsProfiles\Tables;
 
+use App\Filament\Resources\GainsProfiles\GainsProfileResource;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -31,6 +32,11 @@ class GainsProfilesTable
                 TextColumn::make('chapter_name')
                     ->label('Chapter')
                     ->searchable(),
+                TextColumn::make('is_public')
+                    ->label('Public')
+                    ->badge()
+                    ->formatStateUsing(fn (bool $state): string => $state ? 'Public' : 'Private')
+                    ->color(fn (bool $state): string => $state ? 'success' : 'gray'),
                 TextColumn::make('slug')
                     ->label('Link Public')
                     ->url(fn ($record) => url('/p/' . $record->slug))
@@ -60,7 +66,8 @@ class GainsProfilesTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->visible(fn (): bool => GainsProfileResource::canDeleteAny()),
                 ]),
             ]);
     }

@@ -3,8 +3,10 @@
 namespace App\Filament\Resources\GainsProfiles\Pages;
 
 use App\Filament\Resources\GainsProfiles\GainsProfileResource;
+use App\Models\GainsProfile;
 use App\Models\User;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -31,6 +33,12 @@ class CreateGainsProfile extends CreateRecord
                 'password' => Hash::make('bnikinhbac'),
             ]
         );
+
+        if (GainsProfile::where('user_id', $user->id)->exists()) {
+            throw ValidationException::withMessages([
+                'data.user_email' => 'Tài khoản này đã có hồ sơ GAINS. Mỗi user chỉ có 1 profile.',
+            ]);
+        }
 
         $data['user_id'] = $user->id;
 
