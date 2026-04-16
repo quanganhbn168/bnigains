@@ -265,7 +265,7 @@
                         <swiper-container pagination="true" pagination-clickable="true" loop="true" autoplay-delay="2500" class="w-full">
                             @foreach($personalPhotoUrls as $idx => $photoUrl)
                                 <swiper-slide>
-                                    <img src="{{ $photoUrl }}" class="w-full h-auto object-cover shadow-inner" alt="Album cá nhân {{ $idx + 1 }}">
+                                    <img src="{{ $photoUrl }}" class="w-full aspect-[4/3] object-cover shadow-inner" alt="Album cá nhân {{ $idx + 1 }}">
                                 </swiper-slide>
                             @endforeach
                         </swiper-container>
@@ -675,6 +675,18 @@
         @endif
     </section>
     @endif
+
+    <section class="relative w-full py-10 bg-white">
+        <div class="px-5">
+            <div class="w-full max-w-[440px] mx-auto rounded-xl border border-gray-200 bg-white shadow-sm p-6 text-center">
+                <h3 class="text-[18px] font-bold text-gray-900">QR PROFILE VĨNH VIỄN</h3>
+                <p class="text-sm text-gray-600 mt-2">Quet QR de mo ho so nay voi link co dinh.</p>
+                <div class="mt-5 flex justify-center">
+                    {!! \SimpleSoftwareIO\QrCode\Facades\QrCode::size(180)->margin(1)->generate($profile->permanent_url) !!}
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- THANK YOU BANNER -->
     <section class="relative w-full aspect-[4/5] md:max-w-md mx-auto overflow-hidden bg-black mt-8 text-white flex flex-col justify-between items-center py-10" style="background-image: url('{{ $thanksBackgroundUrl }}'); background-size: cover; background-position: center;">

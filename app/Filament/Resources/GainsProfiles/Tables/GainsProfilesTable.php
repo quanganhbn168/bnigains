@@ -3,11 +3,14 @@
 namespace App\Filament\Resources\GainsProfiles\Tables;
 
 use App\Filament\Resources\GainsProfiles\GainsProfileResource;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\HtmlString;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class GainsProfilesTable
 {
@@ -43,12 +46,6 @@ class GainsProfilesTable
                     ->openUrlInNewTab()
                     ->color('primary')
                     ->searchable(),
-                TextColumn::make('qr_token')
-                    ->label('Link QR vĩnh viễn')
-                    ->url(fn ($record) => $record->permanent_url)
-                    ->openUrlInNewTab()
-                    ->color('success')
-                    ->toggleable(),
                 TextColumn::make('company_name')
                     ->label('Công ty')
                     ->searchable(),
@@ -68,6 +65,19 @@ class GainsProfilesTable
                 //
             ])
             ->recordActions([
+                Action::make('showPermanentQr')
+                    ->label('QR')
+                    ->icon('heroicon-o-qr-code')
+                    ->color('success')
+                    ->modalHeading('QR vĩnh viễn')
+                    ->modalSubmitAction(false)
+                    ->modalCancelActionLabel('Đóng')
+                    ->modalContent(fn ($record): HtmlString => new HtmlString(
+                        '<div class="flex flex-col items-center gap-3">'
+                        . QrCode::size(280)->margin(1)->generate($record->permanent_url)
+                        . '<p class="text-sm text-gray-600 break-all text-center">' . e($record->permanent_url) . '</p>'
+                        . '</div>'
+                    )),
                 EditAction::make(),
             ])
             ->toolbarActions([

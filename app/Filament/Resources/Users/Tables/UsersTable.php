@@ -3,11 +3,14 @@
 namespace App\Filament\Resources\Users\Tables;
 
 use App\Filament\Resources\Users\UserResource;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\HtmlString;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class UsersTable
 {
@@ -37,12 +40,6 @@ class UsersTable
                     ->url(fn ($record) => $record->gainsProfile?->slug ? url('/p/' . $record->gainsProfile->slug) : null)
                     ->openUrlInNewTab()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('gainsProfile.qr_token')
-                    ->label('Link QR vĩnh viễn')
-                    ->placeholder('-')
-                    ->url(fn ($record) => $record->gainsProfile?->qr_token ? $record->gainsProfile->permanent_url : null)
-                    ->openUrlInNewTab()
-                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('roles.name')
                     ->label('Vai trò')
                     ->badge(),
@@ -56,6 +53,20 @@ class UsersTable
                 //
             ])
             ->recordActions([
+                Action::make('showPermanentQr')
+                    ->label('QR')
+                    ->icon('heroicon-o-qr-code')
+                    ->color('success')
+                    ->visible(fn ($record): bool => filled($record->gainsProfile?->qr_token))
+                    ->modalHeading('QR vĩnh viễn')
+                    ->modalSubmitAction(false)
+                    ->modalCancelActionLabel('Đóng')
+                    ->modalContent(fn ($record): HtmlString => new HtmlString(
+                        '<div class="flex flex-col items-center gap-3">'
+                        . QrCode::size(280)->margin(1)->generate($record->gainsProfile->permanent_url)
+                        . '<p class="text-sm text-gray-600 break-all text-center">' . e($record->gainsProfile->permanent_url) . '</p>'
+                        . '</div>'
+                    )),
                 EditAction::make(),
             ])
             ->toolbarActions([
