@@ -23,7 +23,7 @@ class Login extends BaseLogin
 
     protected function getCredentialsFromFormData(#[SensitiveParameter] array $data): array
     {
-        $login = $data['login'];
+        $login = trim((string) ($data['login'] ?? ''));
 
         // Tìm user theo username hoặc email trước
         $user = User::where('username', $login)
@@ -42,8 +42,16 @@ class Login extends BaseLogin
             }
         }
 
+        if ($user) {
+            return [
+                'id' => $user->getAuthIdentifier(),
+                'password' => $data['password'],
+            ];
+        }
+
         return [
-            'email' => $user?->email ?? $login,
+            // fallback: vẫn cho phép thử theo email như flow mặc định
+            'email' => $login,
             'password' => $data['password'],
         ];
     }
