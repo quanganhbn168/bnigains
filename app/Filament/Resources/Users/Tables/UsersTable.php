@@ -5,7 +5,6 @@ namespace App\Filament\Resources\Users\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -27,6 +26,16 @@ class UsersTable
                 TextColumn::make('phone')
                     ->label('SĐT')
                     ->searchable(),
+                TextColumn::make('gainsProfile.full_name')
+                    ->label('Profile đã liên kết')
+                    ->placeholder('Chưa có profile')
+                    ->searchable(),
+                TextColumn::make('gainsProfile.slug')
+                    ->label('Link profile')
+                    ->placeholder('-')
+                    ->url(fn ($record) => $record->gainsProfile?->slug ? url('/p/' . $record->gainsProfile->slug) : null)
+                    ->openUrlInNewTab()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('roles.name')
                     ->label('Vai trò')
                     ->badge(),

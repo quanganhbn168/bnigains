@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('phone')->nullable()->unique()->after('email');
-            $table->string('email')->nullable()->change(); // Email ko bắt buộc nữa
         });
     }
 
@@ -24,7 +23,6 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('phone');
-            $table->string('email')->nullable(false)->change();
         });
     }
 };

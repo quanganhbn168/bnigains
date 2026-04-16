@@ -19,6 +19,15 @@ class GainsProfilesTable
                 TextColumn::make('full_name')
                     ->label('Họ và tên')
                     ->searchable(),
+                TextColumn::make('user.username')
+                    ->label('Tài khoản')
+                    ->placeholder('-')
+                    ->searchable(),
+                TextColumn::make('user.email')
+                    ->label('Email đăng nhập')
+                    ->placeholder('-')
+                    ->searchable()
+                    ->toggleable(),
                 TextColumn::make('chapter_name')
                     ->label('Chapter')
                     ->searchable(),
