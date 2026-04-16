@@ -43,6 +43,12 @@ class GainsProfilesTable
                     ->openUrlInNewTab()
                     ->color('primary')
                     ->searchable(),
+                TextColumn::make('qr_token')
+                    ->label('Link QR vĩnh viễn')
+                    ->url(fn ($record) => $record->permanent_url)
+                    ->openUrlInNewTab()
+                    ->color('success')
+                    ->toggleable(),
                 TextColumn::make('company_name')
                     ->label('Công ty')
                     ->searchable(),

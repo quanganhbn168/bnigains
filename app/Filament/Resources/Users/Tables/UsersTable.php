@@ -37,6 +37,12 @@ class UsersTable
                     ->url(fn ($record) => $record->gainsProfile?->slug ? url('/p/' . $record->gainsProfile->slug) : null)
                     ->openUrlInNewTab()
                     ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('gainsProfile.qr_token')
+                    ->label('Link QR vĩnh viễn')
+                    ->placeholder('-')
+                    ->url(fn ($record) => $record->gainsProfile?->qr_token ? $record->gainsProfile->permanent_url : null)
+                    ->openUrlInNewTab()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('roles.name')
                     ->label('Vai trò')
                     ->badge(),

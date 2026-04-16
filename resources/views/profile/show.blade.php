@@ -253,14 +253,8 @@
                         <div class="mt-1.5 ml-4 space-y-1">
                             <div class="flex items-center gap-2">
                                 <div class="w-1 h-1 rounded-sm bg-gray-500"></div>
-                                <span class="tracking-wide">{{ $profile->phone_cv_1 }}</span>
+                                <span class="tracking-wide">{{ $profile->phone_personal }}</span>
                             </div>
-                            @if($profile->phone_cv_2)
-                                <div class="flex items-center gap-2">
-                                    <div class="w-1 h-1 rounded-sm bg-gray-500"></div>
-                                    <span class="tracking-wide">{{ $profile->phone_cv_2 }}</span>
-                                </div>
-                            @endif
                         </div>
                     </div>
                 </div>
@@ -392,32 +386,10 @@
 
                 <div class="space-y-4 text-[18px] text-gray-900 leading-relaxed font-tinos px-6 mb-12">
                     {!! $coreProductsHtml !!}
-                </div>
-
-                <!-- 2. DỊCH VỤ ĐI KÈM -->
-                <div class="flex justify-center relative z-10 mb-6">
-                    <x-profile.badge>DỊCH VỤ ĐI KÈM</x-profile.badge>
-                </div>
-
-                <div class="space-y-4 text-[18px] text-gray-900 leading-relaxed font-tinos px-6 mb-12">
-                    {!! $accompanyingServicesHtml !!}
-                </div>
-
-                <!-- 3. SẢN PHẨM NỔI BẬT -->
-                <div class="flex justify-center relative z-10 mb-6">
-                    <x-profile.badge>SẢN PHẨM NỔI BẬT</x-profile.badge>
-                </div>
-
-                <div class="space-y-4 text-[18px] text-gray-900 leading-relaxed font-tinos px-6">
-                    {!! $highlightProductsHtml !!}
-                </div>
-
-            </div>
-
-            @if(!empty($productGallery1Urls))
+                    @if(!empty($productGallery1Urls))
                 <div class="w-full max-w-[440px] mx-auto mt-4 mb-8 overflow-hidden rounded-xl shadow-md border border-gray-100">
                     <div class="px-4 py-3 border-b border-gray-100 bg-white">
-                        <div class="font-bold text-gray-900">Gallery Sản phẩm 1</div>
+                        <div class="font-bold text-gray-900">Sản phẩm Chính</div>
                     </div>
                     <swiper-container pagination="true" pagination-clickable="true" loop="true" autoplay-delay="3000" class="w-full">
                         @foreach($productGallery1Urls as $idx => $img)
@@ -428,11 +400,19 @@
                     </swiper-container>
                 </div>
             @endif
+                </div>
 
-            @if(!empty($productGallery2Urls))
+                <!-- 2. DỊCH VỤ ĐI KÈM -->
+                <div class="flex justify-center relative z-10 mb-6">
+                    <x-profile.badge>DỊCH VỤ ĐI KÈM</x-profile.badge>
+                </div>
+
+                <div class="space-y-4 text-[18px] text-gray-900 leading-relaxed font-tinos px-6 mb-12">
+                    {!! $accompanyingServicesHtml !!}
+                    @if(!empty($productGallery2Urls))
                 <div class="w-full max-w-[440px] mx-auto mt-4 mb-8 overflow-hidden rounded-xl shadow-md border border-gray-100">
                     <div class="px-4 py-3 border-b border-gray-100 bg-white">
-                        <div class="font-bold text-gray-900">Gallery Dịch vụ</div>
+                        <div class="font-bold text-gray-900">Dịch vụ đi kèm</div>
                     </div>
                     <swiper-container pagination="true" pagination-clickable="true" loop="true" autoplay-delay="3000" class="w-full">
                         @foreach($productGallery2Urls as $idx => $img)
@@ -443,11 +423,19 @@
                     </swiper-container>
                 </div>
             @endif
+                </div>
 
-            @if(!empty($productGallery3Urls))
+                <!-- 3. SẢN PHẨM NỔI BẬT -->
+                <div class="flex justify-center relative z-10 mb-6">
+                    <x-profile.badge>SẢN PHẨM NỔI BẬT</x-profile.badge>
+                </div>
+
+                <div class="space-y-4 text-[18px] text-gray-900 leading-relaxed font-tinos px-6">
+                    {!! $highlightProductsHtml !!}
+                    @if(!empty($productGallery3Urls))
                 <div class="w-full max-w-[440px] mx-auto mt-4 mb-4 overflow-hidden rounded-xl shadow-md border border-gray-100">
                     <div class="px-4 py-3 border-b border-gray-100 bg-white">
-                        <div class="font-bold text-gray-900">Gallery Sản phẩm</div>
+                        <div class="font-bold text-gray-900">Sản phẩm nổi bật</div>
                     </div>
                     <swiper-container pagination="true" pagination-clickable="true" loop="true" autoplay-delay="3000" class="w-full">
                         @foreach($productGallery3Urls as $idx => $img)
@@ -458,6 +446,15 @@
                     </swiper-container>
                 </div>
             @endif
+                </div>
+
+            </div>
+
+
+
+
+
+
 
         </div>
     </section>

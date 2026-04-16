@@ -25,6 +25,10 @@ class GainsProfile extends Model implements HasMedia
             if (empty($profile->slug) && !empty($profile->full_name)) {
                 $profile->slug = static::generateUniqueSlug($profile->full_name);
             }
+
+            if (empty($profile->qr_token)) {
+                $profile->qr_token = (string) Str::uuid();
+            }
         });
 
         static::updating(function (GainsProfile $profile) {
@@ -61,5 +65,10 @@ class GainsProfile extends Model implements HasMedia
         ];
 
         return $themeColors[$this->theme_color ?? 'beige'] ?? $themeColors['beige'];
+    }
+
+    public function getPermanentUrlAttribute(): string
+    {
+        return route('profile.show.by-token', ['qrToken' => $this->qr_token]);
     }
 }
