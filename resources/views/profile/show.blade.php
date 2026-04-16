@@ -200,20 +200,6 @@
         </div>
     </section>
 
-    <!-- ACTION BUTTONS -->
-    <section class="max-w-[420px] mx-auto px-6 mb-6 mt-2 relative z-20">
-        <div class="flex items-center justify-center gap-3">
-            <a href="#"
-                class="flex-1 bg-gradient-to-r from-[var(--primary-color)] to-[var(--secondary-color)] text-white py-3.5 rounded-2xl font-bold text-[15px] shadow-[0_8px_15px_-3px_rgba(204,0,0,0.3)] hover:shadow-[0_12px_20px_-3px_rgba(204,0,0,0.4)] hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2">
-                <i class="bi bi-person-vcard text-xl"></i> Lưu Danh bạ
-            </a>
-            <button
-                class="w-[52px] h-[52px] shrink-0 bg-white text-gray-700 rounded-2xl flex items-center justify-center shadow-md hover:bg-gray-50 hover:text-[var(--primary-color)] transition-colors border border-gray-100 group">
-                <i class="bi bi-share-fill text-lg group-hover:scale-110 transition-transform"></i>
-            </button>
-        </div>
-    </section>
-
     <!-- MEMBER INFORMATION SECTION -->
     <section class="relative w-full py-12 bg-gray-50 bg-cover bg-center"
         style="background-image: url('{{ asset('images/bg-pattern.jpg') }}');">
@@ -293,18 +279,7 @@
                     @endif
                 </div>
 
-                <!-- 3. THÔNG TIN GIA ĐÌNH -->
-                <div class="flex justify-center relative z-10 mb-6">
-                    <x-profile.badge>THÔNG TIN GIA ĐÌNH</x-profile.badge>
-                </div>
 
-                <div class="space-y-3.5 text-[18px] text-gray-900 leading-relaxed font-tinos px-6">
-                    @if($hasContent($familyInfoHtml))
-                        {!! $familyInfoHtml !!}
-                    @else
-                        <p class="text-gray-500 italic">Chưa cập nhật thông tin gia đình.</p>
-                    @endif
-                </div>
 
                 <!-- 4. THÔNG TIN KHÁC -->
                 <div class="flex justify-center relative z-10 mt-12 mb-6">
@@ -346,22 +321,22 @@
 
                 <!-- THÔNG TIN DOANH NGHIỆP CARD -->
                 <div id="thong-tin-doanh-nghiep" class="relative w-full max-w-[440px] mx-auto bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] pt-10 pb-10 border border-white/60 mb-8 overflow-hidden">
-                
+
                 <div class="flex justify-center relative z-10 mb-6">
                     <x-profile.badge>THÔNG TIN DOANH NGHIỆP</x-profile.badge>
                 </div>
-                
+
                 <!-- Content Business -->
                 <div class="space-y-3.5 text-[18px] text-gray-900 leading-relaxed font-tinos px-6">
                     @if($profile->company_name)<p><span class="font-bold mr-1">Tên công ty:</span> <span class="leading-tight inline-block">{{ $profile->company_name }}</span></p>@endif
                     @if($profile->job_title)<p><span class="font-bold mr-1">Chức danh:</span> {{ $profile->job_title }}</p>@endif
                     @if($profile->business_category)<p><span class="font-bold mr-1">Lĩnh vực:</span> <span class="leading-tight inline-block">{{ $profile->business_category }}</span></p>@endif
-                    
+
                     <div class="pt-1">
                         <p class="font-bold mb-1">Kinh nghiệm:</p>
                         <p class="pl-0">{{ $profile->experience }}</p>
                     </div>
-                    
+
                     @if(!empty($profile->degrees))
                         <div class="pt-1">
                             <p class="font-bold mb-1.5">Bằng cấp:</p>
@@ -395,7 +370,7 @@
     <section id="san-pham" class="relative w-full py-12 bg-gray-50 bg-cover bg-center" style="background-image: url('{{ asset('images/bg-pattern.jpg') }}');">
         <!-- Overlay -->
         <div class="absolute inset-0 bg-white/40"></div>
-        
+
         <div class="relative z-10 px-5">
             <!-- Section Header -->
             <div class="text-center mb-10">
@@ -410,12 +385,12 @@
 
             <!-- Products White Card -->
             <div class="relative w-full max-w-[440px] mx-auto bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] pt-12 pb-12 border border-white/60 mb-8 overflow-hidden text-center">
-                
+
                 <!-- 1. SẢN PHẨM CHÍNH -->
                 <div class="flex justify-center relative z-10 mb-6">
                     <x-profile.badge>SẢN PHẨM CHÍNH</x-profile.badge>
                 </div>
-                
+
                 <div class="space-y-4 text-[18px] text-gray-900 leading-relaxed font-tinos px-6 mb-12">
                     {!! $coreProductsHtml !!}
                 </div>
@@ -424,7 +399,7 @@
                 <div class="flex justify-center relative z-10 mb-6">
                     <x-profile.badge>DỊCH VỤ ĐI KÈM</x-profile.badge>
                 </div>
-                
+
                 <div class="space-y-4 text-[18px] text-gray-900 leading-relaxed font-tinos px-6 mb-12">
                     {!! $accompanyingServicesHtml !!}
                 </div>
@@ -433,7 +408,7 @@
                 <div class="flex justify-center relative z-10 mb-6">
                     <x-profile.badge>SẢN PHẨM NỔI BẬT</x-profile.badge>
                 </div>
-                
+
                 <div class="space-y-4 text-[18px] text-gray-900 leading-relaxed font-tinos px-6">
                     {!! $highlightProductsHtml !!}
                 </div>
@@ -494,7 +469,7 @@
     <section id="bang-gains" class="relative w-full py-12 bg-gray-50 bg-cover bg-center" style="background-image: url('{{ asset('images/bg-pattern.jpg') }}');">
         <!-- Overlay -->
         <div class="absolute inset-0 bg-white/40"></div>
-        
+
         <div class="relative z-10 px-5">
             <!-- Section Header -->
             <div class="text-center mb-10">
@@ -509,12 +484,12 @@
 
             <!-- GAINS White Card -->
             <div class="relative w-full max-w-[440px] mx-auto bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] pt-12 pb-12 border border-white/60 mb-8 overflow-hidden">
-                
+
                 <!-- Goals -->
                 <div class="flex justify-center relative z-10 mb-6">
                     <x-profile.badge>Goals &ndash; Mục tiêu</x-profile.badge>
                 </div>
-                
+
                 <div class="text-[18px] text-gray-900 leading-relaxed font-tinos px-6">
                     <div class="space-y-2.5 pl-0">{!! $gGoalsHtml !!}</div>
                 </div>
@@ -561,7 +536,7 @@
     <section id="referral" class="relative w-full py-12 bg-gray-50 bg-cover bg-center" style="background-image: url('{{ asset('images/bg-pattern.jpg') }}');">
         <!-- Overlay -->
         <div class="absolute inset-0 bg-white/40"></div>
-        
+
         <div class="relative z-10 px-5">
             <!-- Section Header -->
             <div class="text-center mb-10">
@@ -650,7 +625,7 @@
                 </div>
             </div>
             <div class="relative w-full max-w-[440px] mx-auto bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] pt-10 pb-10 border border-white/60 mb-8 overflow-hidden">
-                
+
                 <div class="text-[18px] text-gray-900 leading-relaxed font-tinos px-7">
                     <h3 class="font-bold text-[16.5px] mb-4">1. Mô tả sản phẩm / dịch vụ công ty cung cấp</h3>
                     <ul class="list-disc pl-2 space-y-2.5 marker:text-black mb-8">
@@ -708,13 +683,6 @@
     <!-- THANK YOU BANNER -->
     <section class="relative w-full aspect-[4/5] md:max-w-md mx-auto overflow-hidden bg-black mt-8 text-white flex flex-col justify-between items-center py-10" style="background-image: url('{{ $thanksBackgroundUrl }}'); background-size: cover; background-position: center;">
         <div class="absolute inset-0 bg-black/60"></div>
-        
-        <div class="relative z-10 w-full px-5 text-center mt-6 flex justify-center">
-            <!-- Dedicated THANK YOU image -->
-            <div class="relative w-full max-w-[340px] flex items-center justify-center drop-shadow-2xl">
-                <img src="{{ asset('images/thankyou.png') }}" alt="Thank You" class="w-full h-auto object-contain">
-            </div>
-        </div>
 
         <div class="relative z-10 flex flex-col items-center gap-1.5 font-philosopher font-bold tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] pb-8 text-center px-4">
             <div class="text-[17px] md:text-lg uppercase">CẢM ƠN QUÝ VỊ</div>
