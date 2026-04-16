@@ -238,10 +238,9 @@
                 <div class="space-y-3.5 text-[18px] text-gray-900 leading-relaxed font-tinos px-6">
                     <p><span class="font-bold mr-1">Họ tên:</span> {{ mb_strtoupper($profile->full_name) }}</p>
                     <p><span class="font-bold mr-1">Ngày sinh:</span> {{ $profile->dob }}</p>
-                    <p><span class="font-bold mr-1">Nơi sinh:</span> <span
-                            class="leading-tight inline-block">{{ $profile->pob }}</span></p>
 
-                    <p><span class="font-bold mr-1">Địa chỉ hiện tại 1:</span> <span
+
+                    <p><span class="font-bold mr-1">Địa chỉ hiện tại:</span> <span
                             class="leading-tight inline-block">{{ $profile->address_1 }}</span></p>
 
                     @if($profile->address_2)
@@ -282,11 +281,11 @@
 
 
                 <!-- 4. THÔNG TIN KHÁC -->
-                <div class="flex justify-center relative z-10 mt-12 mb-6">
+                {{-- <div class="flex justify-center relative z-10 mt-12 mb-6">
                     <x-profile.badge>THÔNG TIN KHÁC</x-profile.badge>
-                </div>
+                </div> --}}
 
-                <div class="space-y-4 text-[18px] text-gray-900 leading-relaxed font-tinos px-6">
+                {{-- <div class="space-y-4 text-[18px] text-gray-900 leading-relaxed font-tinos px-6">
                     <div>
                         <p class="font-bold mb-1.5">Khát vọng cháy bỏng của tôi là:</p>
                         <div class="pl-0">{!! $profile->aspiration !!}</div>
@@ -297,7 +296,7 @@
                             <div class="pl-0">{!! $profile->unknown_fact !!}</div>
                         </div>
                     @endif
-                </div>
+                </div> --}}
 
             </div>
 
@@ -684,7 +683,7 @@
     <section class="relative w-full aspect-[4/5] md:max-w-md mx-auto overflow-hidden bg-black mt-8 text-white flex flex-col justify-between items-center py-10" style="background-image: url('{{ $thanksBackgroundUrl }}'); background-size: cover; background-position: center;">
         <div class="absolute inset-0 bg-black/60"></div>
 
-        <div class="relative z-10 flex flex-col items-center gap-1.5 font-philosopher font-bold tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] pb-8 text-center px-4">
+        <div class="relative z-10 mt-auto flex flex-col items-center gap-1.5 font-philosopher font-bold tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] pb-8 text-center px-4">
             <div class="text-[17px] md:text-lg uppercase">CẢM ƠN QUÝ VỊ</div>
             <div class="text-[15px] md:text-base uppercase">ĐÃ ĐỌC HẾT PHẦN GIỚI THIỆU</div>
             <div class="text-[13px] md:text-[15px] text-[#eacf82] mt-4 font-sans tracking-normal">Designed by THT MEDIA</div>
