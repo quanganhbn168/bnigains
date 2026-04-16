@@ -154,7 +154,9 @@
         <!-- Banner Image -->
         <div class="w-full relative shadow-sm">
             @if($bannerUrl)
-                <img src="{{ $bannerUrl }}" class="w-full h-auto object-cover block">
+                <div class="w-full aspect-[9/16] overflow-hidden">
+                    <img src="{{ $bannerUrl }}" class="w-full h-full object-cover block" alt="Banner">
+                </div>
             @endif
 
             <!-- Subtle gradient to blend portrait at bottom -->
@@ -241,7 +243,9 @@
                 </div>
                 @if($avatarUrl)
                     <div class="px-6 mb-6">
-                        <img src="{{ $avatarUrl }}" class="w-full h-auto object-contain rounded-xl shadow-sm" alt="Ảnh chân dung">
+                        <div class="w-full aspect-[9/16] overflow-hidden rounded-xl shadow-sm">
+                            <img src="{{ $avatarUrl }}" class="w-full h-full object-cover" alt="Ảnh chân dung">
+                        </div>
                     </div>
                 @endif
                 <!-- Content Personal -->
