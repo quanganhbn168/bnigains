@@ -30,6 +30,7 @@ class GainsProfileForm
                                     ->placeholder('VD: Chủ tịch NK20'),
                                 TextInput::make('chapter_name')
                                     ->label('Tên Chapter')
+                                    ->default('BNI KINHBAC CHAPTER')
                                     ->placeholder('VD: BNI Power Chapter - HN2'),
                                 Toggle::make('is_public')
                                     ->label('Cho phép hiển thị public')
@@ -76,7 +77,7 @@ class GainsProfileForm
                                     ->label('Email đăng nhập')
                                     ->email()
                                     ->required()
-                                    ->helperText('Hệ thống sẽ tự tạo tài khoản với mật khẩu mặc định: bnikinhbac'),
+                                    ->helperText('Hệ thống sẽ tự tạo tài khoản với mật khẩu mặc định: kinhbac123'),
 
                                 TextInput::make('phone_cv')->tel()->label('SĐT công việc'),
                                 TextInput::make('phone_personal')->tel()->label('SĐT cá nhân'),
