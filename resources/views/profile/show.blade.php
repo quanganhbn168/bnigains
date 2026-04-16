@@ -326,7 +326,7 @@
                 @if(!empty($businessPhotoUrls))
                 <!-- ALBUM DOANH NGHIỆP -->
                 <div class="w-full max-w-[440px] mx-auto mb-8">
-                    <div class="flex justify-center mb-4">
+                    <div class="flex justify-center mb-4 mt-4">
                         <x-profile.badge>ALBUM DOANH NGHIỆP</x-profile.badge>
                     </div>
 
