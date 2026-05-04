@@ -10,3 +10,4 @@ Route::get('/', function () {
 // Route hiển thị hồ sơ public
 Route::get('/p/{slug}', [GainsProfileController::class, 'show'])->name('profile.show');
 Route::get('/qr/{qrToken}', [GainsProfileController::class, 'showByToken'])->name('profile.show.by-token');
+Route::get('/qr/{qrToken}/download', [GainsProfileController::class, 'downloadQrByToken'])->name('profile.qr.download');

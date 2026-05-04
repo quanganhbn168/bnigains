@@ -1,152 +1,8 @@
 @extends('layouts.profile')
 
-@section('title', $profile->full_name . ' | BNI 1-2-1 Digital Profile')
+@section('title', $pageTitle)
 
-@section('body_style', $profile->theme_style)
-
-@php
-    $normalizeList = function ($value): array {
-        if (is_array($value)) {
-            return array_values(array_filter(array_map('trim', $value)));
-        }
-
-        if (is_null($value)) {
-            return [];
-        }
-
-        if (is_string($value)) {
-            $text = trim($value);
-            if ($text === '') {
-                return [];
-            }
-
-            // Convert common HTML line breaks to new lines, then split.
-            $text = str_ireplace(['<br>', '<br/>', '<br />', '</p><p>', '</li><li>', '</ul><ul>', '&nbsp;'], ["\n", "\n", "\n", "\n", "\n", "\n", ' '], $text);
-            $text = strip_tags($text);
-
-            $parts = preg_split("/\r\n|\r|\n|•|\t|\\s{2,}/", $text) ?: [];
-
-            return array_values(array_filter(array_map('trim', $parts), fn ($v) => $v !== ''));
-        }
-
-        if (is_object($value)) {
-            return (array) $value;
-        }
-
-        return [];
-    };
-
-    $renderRichOrList = function ($richValue, array $listValue, string $listType = 'p'): string {
-        $rich = is_string($richValue) ? trim($richValue) : '';
-
-        if ($rich !== '') {
-            return $rich;
-        }
-
-        if (empty($listValue)) {
-            return '';
-        }
-
-        if ($listType === 'ul') {
-            $items = collect($listValue)
-                ->map(fn ($v) => '<li class="leading-tight">' . e($v) . '</li>')
-                ->implode('');
-
-            return '<ul class="list-disc pl-2 space-y-2.5 marker:text-black">' . $items . '</ul>';
-        }
-
-        $items = collect($listValue)
-            ->map(fn ($v) => '<p class="leading-tight">' . e($v) . '</p>')
-            ->implode('');
-
-        return $items;
-    };
-
-    $hasContent = function (?string $html): bool {
-        if (!is_string($html)) {
-            return false;
-        }
-
-        return trim(strip_tags($html)) !== '';
-    };
-
-    // Map field aliases so the old template keys read data from current DB schema.
-    $profile->dob = $profile->dob ?? $profile->date_of_birth;
-    $profile->pob = $profile->pob ?? $profile->place_of_birth;
-    $profile->phone_cv_1 = $profile->phone_cv_1 ?? $profile->phone_cv;
-    $profile->phone_cv_2 = $profile->phone_cv_2 ?? $profile->phone_personal;
-    $profile->aspiration = $profile->aspiration ?? $profile->burning_desire;
-    $profile->experience = $profile->experience ?? $profile->experience_years;
-    $profile->degrees = $profile->degrees ?? $profile->qualifications;
-
-    // Normalize list-like fields to arrays (handles string input from RichEditor/text)
-    $profile->main_products = $normalizeList($profile->main_products ?? null);
-    $profile->accompanying_services = $normalizeList($profile->accompanying_services ?? null);
-    $profile->outstanding_products = $normalizeList($profile->outstanding_products ?? null);
-
-    $profile->gains_goals = $normalizeList($profile->gains_goals ?? null);
-    $profile->gains_accomplishments = $normalizeList($profile->gains_accomplishments ?? null);
-    $profile->gains_interests = $normalizeList($profile->gains_interests ?? null);
-    $profile->gains_networks = $normalizeList($profile->gains_networks ?? null);
-    $profile->gains_skills = $normalizeList($profile->gains_skills ?? null);
-
-    $profile->ideal_referrals = $normalizeList($profile->ideal_referrals ?? null);
-    $profile->commitments = $normalizeList($profile->commitments ?? null);
-    $profile->desired_introductions = $normalizeList($profile->desired_introductions ?? null);
-    $profile->contact_sphere = $normalizeList($profile->contact_sphere ?? null);
-
-    $personalPhotoUrls = $profile->getMedia('personal_photos')->map(fn ($m) => $m->getUrl())->all();
-    $businessPhotoUrls = $profile->getMedia('business_photos')->map(fn ($m) => $m->getUrl())->all();
-    $activityPhotoUrls = $profile->getMedia('activity_photos')->map(fn ($m) => $m->getUrl())->all();
-    $productGallery1Urls = $profile->getMedia('product_gallery_1')->map(fn ($m) => $m->getUrl())->all();
-    $productGallery2Urls = $profile->getMedia('product_gallery_2')->map(fn ($m) => $m->getUrl())->all();
-    $productGallery3Urls = $profile->getMedia('product_gallery_3')->map(fn ($m) => $m->getUrl())->all();
-
-    $bannerUrl = $profile->getFirstMediaUrl('banner');
-    $avatarUrl = $profile->getFirstMediaUrl('avatar');
-    $thanksBackgroundUrl = $profile->getFirstMediaUrl('footer') ?: $bannerUrl;
-
-    $coreProductsHtml = $renderRichOrList($profile->core_products ?? null, $profile->main_products);
-    $accompanyingServicesHtml = $renderRichOrList($profile->accompanying_services ?? null, $profile->accompanying_services);
-    $highlightProductsHtml = $renderRichOrList($profile->highlight_products ?? null, $profile->outstanding_products);
-
-    $gGoalsHtml = $renderRichOrList($profile->g_goals ?? null, $profile->gains_goals);
-    $aAccomplishmentsHtml = $renderRichOrList($profile->a_accomplishments ?? null, $profile->gains_accomplishments);
-    $iInterestsHtml = $renderRichOrList($profile->i_interests ?? null, $profile->gains_interests);
-    $nNetworksHtml = $renderRichOrList($profile->n_networks ?? null, $profile->gains_networks);
-    $sSkillsHtml = $renderRichOrList($profile->s_skills ?? null, $profile->gains_skills);
-
-    $idealReferralHtml = $renderRichOrList($profile->ideal_referral ?? null, $profile->ideal_referrals, 'ul');
-    $commitmentHtml = $renderRichOrList($profile->bni_commitment ?? null, $profile->commitments, 'ul');
-    $wishesHtml = $renderRichOrList($profile->connection_wishes ?? null, $profile->desired_introductions, 'ul');
-    $sphereHtml = $renderRichOrList($profile->connection_fields ?? null, $profile->contact_sphere, 'ul');
-    $familyInfoHtml = is_string($profile->family_info ?? null) ? $profile->family_info : '';
-
-    $hasBusinessInfo = filled($profile->company_name)
-        || filled($profile->job_title)
-        || filled($profile->business_category)
-        || filled($profile->experience)
-        || $hasContent(is_string($profile->degrees) ? $profile->degrees : null);
-    $hasBusinessSection = $hasBusinessInfo || !empty($businessPhotoUrls);
-
-    $hasProductsSection = $hasContent($coreProductsHtml)
-        || $hasContent($accompanyingServicesHtml)
-        || $hasContent($highlightProductsHtml)
-        || !empty($productGallery1Urls)
-        || !empty($productGallery2Urls)
-        || !empty($productGallery3Urls);
-
-    $hasGainsSection = $hasContent($gGoalsHtml)
-        || $hasContent($aAccomplishmentsHtml)
-        || $hasContent($iInterestsHtml)
-        || $hasContent($nNetworksHtml)
-        || $hasContent($sSkillsHtml);
-
-    $hasReferralSection = $hasContent($idealReferralHtml)
-        || $hasContent($commitmentHtml)
-        || $hasContent($wishesHtml)
-        || $hasContent($sphereHtml);
-@endphp
+@section('body_style', $bodyStyle)
 
 @section('content')
     <!-- BANNER & NAME BADGE -->
@@ -236,7 +92,7 @@
                 @endif
                 <!-- Content Personal -->
                 <div class="space-y-3.5 text-[18px] text-gray-900 leading-relaxed font-tinos px-6">
-                    <p><span class="font-bold mr-1">Họ tên:</span> {{ mb_strtoupper($profile->full_name) }}</p>
+                    <p><span class="font-bold mr-1">Họ tên:</span> {{ $profileFullNameUpper }}</p>
                     @if($profile->education)
                         <p><span class="font-bold mr-1">Học vấn:</span> {{ $profile->education }}</p>
                     @endif
@@ -314,11 +170,11 @@
                         <p class="pl-0">{{ $profile->experience }}</p>
                     </div>
 
-                    @if(!empty($profile->degrees))
+                    @if($hasDegrees)
                         <div class="pt-1">
                             <p class="font-bold mb-1.5">Bằng cấp:</p>
                             <div class="space-y-1 pl-0">
-                                {!! is_string($profile->degrees) ? $profile->degrees : $renderRichOrList(null, (array) $profile->degrees) !!}
+                                {!! $degreesHtml !!}
                             </div>
                         </div>
                     @endif
@@ -394,7 +250,7 @@
                     <swiper-container pagination="true" pagination-clickable="true" loop="true" autoplay-delay="3000" class="w-full">
                         @foreach($productGallery1Urls as $idx => $img)
                             <swiper-slide>
-                                <img src="{{ $img }}" class="w-full aspect-[4/5] object-cover" alt="Gallery sản phẩm 1 - {{ $idx + 1 }}">
+                                <img src="{{ $img }}" class="w-full aspect-[4/3] object-cover" alt="Gallery sản phẩm 1 - {{ $idx + 1 }}">
                             </swiper-slide>
                         @endforeach
                     </swiper-container>
@@ -417,7 +273,7 @@
                     <swiper-container pagination="true" pagination-clickable="true" loop="true" autoplay-delay="3000" class="w-full">
                         @foreach($productGallery2Urls as $idx => $img)
                             <swiper-slide>
-                                <img src="{{ $img }}" class="w-full aspect-[4/5] object-cover" alt="Gallery dịch vụ - {{ $idx + 1 }}">
+                                <img src="{{ $img }}" class="w-full aspect-[4/3] object-cover" alt="Gallery dịch vụ - {{ $idx + 1 }}">
                             </swiper-slide>
                         @endforeach
                     </swiper-container>
@@ -440,7 +296,7 @@
                     <swiper-container pagination="true" pagination-clickable="true" loop="true" autoplay-delay="3000" class="w-full">
                         @foreach($productGallery3Urls as $idx => $img)
                             <swiper-slide>
-                                <img src="{{ $img }}" class="w-full aspect-[4/5] object-cover" alt="Gallery sản phẩm - {{ $idx + 1 }}">
+                                <img src="{{ $img }}" class="w-full aspect-[4/3] object-cover" alt="Gallery sản phẩm - {{ $idx + 1 }}">
                             </swiper-slide>
                         @endforeach
                     </swiper-container>
@@ -487,7 +343,7 @@
                 </div>
 
                 <div class="text-[18px] text-gray-900 leading-relaxed font-tinos px-6">
-                    <div class="space-y-2.5 pl-0">{!! $gGoalsHtml !!}</div>
+                    <div class="space-y-2.5 pl-0">{!! nl2br($gGoalsHtml) !!}</div>
                 </div>
 
                 <!-- Accomplishments -->
@@ -495,7 +351,7 @@
                     <x-profile.badge>Accomplishments &ndash; Thành tựu</x-profile.badge>
                 </div>
                 <div class="text-[18px] text-gray-900 leading-relaxed font-tinos px-6">
-                    <div class="space-y-3 pl-0">{!! $aAccomplishmentsHtml !!}</div>
+                    <div class="space-y-3 pl-0">{!! nl2br($aAccomplishmentsHtml) !!}</div>
                 </div>
 
                 <!-- Interests -->
@@ -554,7 +410,7 @@
         </div>
 
         <!-- CAM KẾT TRONG BNI SECTION -->
-        @if($hasContent($commitmentHtml))
+        @if($hasCommitmentSection)
         <div class="relative z-10 px-5 mt-4">
             <div class="text-center mb-10">
                 <h2 class="text-[26px] md:text-3xl font-philosopher font-bold text-[#D31215] uppercase tracking-wide drop-shadow-sm">
@@ -579,7 +435,7 @@
         @endif
 
         <!-- MONG MUỐN ĐƯỢC GIỚI THIỆU SECTION -->
-        @if($hasContent($wishesHtml))
+        @if($hasWishesSection)
         <div class="relative z-10 px-5 mt-4">
             <div class="text-center mb-10">
                 <h2 class="text-[26px] md:text-3xl font-philosopher font-bold text-[#D31215] uppercase tracking-wide drop-shadow-sm">
@@ -604,7 +460,7 @@
         @endif
 
         <!-- BẢNG ĐẶT HỢP TÁC MQH SECTION -->
-        @if($hasContent($coreProductsHtml) || $hasContent($accompanyingServicesHtml) || $hasContent($highlightProductsHtml))
+        @if($hasPartnershipSection)
         <div class="relative z-10 px-5 mt-4">
             <div class="text-center mb-10">
                 <h2 class="text-[26px] md:text-3xl font-philosopher font-bold text-[#D31215] uppercase tracking-wide drop-shadow-sm">
@@ -650,7 +506,7 @@
         @endif
 
         <!-- CONTACT SPHERE SECTION -->
-        @if($hasContent($sphereHtml))
+        @if($hasSphereSection)
         <div class="relative z-10 px-5 mt-4">
             <div class="text-center mb-10">
                 <h2 class="text-[26px] md:text-3xl font-philosopher font-bold text-[#D31215] uppercase tracking-wide drop-shadow-sm">

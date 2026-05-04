@@ -45,6 +45,11 @@ class EditGainsProfile extends EditRecord
             $data['user_email'] = $user->email;
         }
 
+        // Gộp DB `address_1/address_2` -> form `address`
+        $address1 = $data['address_1'] ?? null;
+        $address2 = $data['address_2'] ?? null;
+        $data['address'] = trim((string) $address1 . ($address2 ? ', ' . $address2 : ''));
+
         return $data;
     }
 
@@ -55,6 +60,13 @@ class EditGainsProfile extends EditRecord
                 'name' => $data['full_name'],
                 'email' => $data['user_email'],
             ]);
+        }
+
+        // Tách form `address` -> DB `address_1/address_2`
+        if (array_key_exists('address', $data)) {
+            $data['address_1'] = $data['address'];
+            $data['address_2'] = null;
+            unset($data['address']);
         }
 
         unset($data['user_email']);

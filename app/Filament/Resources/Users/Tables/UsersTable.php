@@ -35,7 +35,7 @@ class UsersTable
                     ->placeholder('Chưa có profile')
                     ->searchable(),
                 TextColumn::make('gainsProfile.slug')
-                    ->label('Link profile')
+                    ->label('Link hồ sơ')
                     ->placeholder('-')
                     ->url(fn ($record) => $record->gainsProfile?->public_url)
                     ->openUrlInNewTab()
@@ -58,7 +58,7 @@ class UsersTable
                     ->icon('heroicon-o-qr-code')
                     ->color('success')
                     ->visible(fn ($record): bool => filled($record->gainsProfile?->qr_token))
-                    ->modalHeading('QR Link Public')
+                    ->modalHeading('QR - Link công khai')
                     ->modalSubmitAction(false)
                     ->modalCancelActionLabel('Đóng')
                     ->modalContent(fn ($record): HtmlString => new HtmlString(

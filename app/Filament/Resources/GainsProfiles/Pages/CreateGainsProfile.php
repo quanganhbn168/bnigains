@@ -42,6 +42,13 @@ class CreateGainsProfile extends CreateRecord
 
         $data['user_id'] = $user->id;
 
+        // Gộp field form `address` -> DB `address_1`
+        if (array_key_exists('address', $data)) {
+            $data['address_1'] = $data['address'];
+            $data['address_2'] = null;
+            unset($data['address']);
+        }
+
         // Xoá trường ảo (không tồn tại trong DB)
         unset($data['user_email']);
 

@@ -76,4 +76,19 @@ class GainsProfile extends Model implements HasMedia
     {
         return route('profile.show', ['slug' => $this->slug]);
     }
+
+    public function getAddressAttribute(): ?string
+    {
+        $address1 = $this->getAttribute('address_1');
+        $address2 = $this->getAttribute('address_2');
+
+        $address1 = is_string($address1) ? trim($address1) : null;
+        $address2 = is_string($address2) ? trim($address2) : null;
+
+        if (!$address1 && !$address2) {
+            return null;
+        }
+
+        return trim((string) $address1 . ($address2 ? ', ' . $address2 : ''));
+    }
 }

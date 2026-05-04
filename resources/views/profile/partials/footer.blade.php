@@ -4,7 +4,8 @@
             &copy; {{ date('Y') }} {{ $profile->full_name ?? 'BNI Member' }}. All rights reserved.
         </p>
         <p class="text-[11px] text-gray-400 mt-1 flex items-center justify-center gap-1">
-            Built for <span class="font-bold text-red-600 tracking-wider">BNI</span> Gains Chapter
+            Thiết kế cho <span class="font-bold text-red-600 tracking-wider">BNI</span>
+            {{ $profile->chapter_name ?? '' }}
         </p>
     </div>
 </footer>

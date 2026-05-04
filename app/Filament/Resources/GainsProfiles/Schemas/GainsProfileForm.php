@@ -88,9 +88,9 @@ class GainsProfileForm
                                 TextInput::make('email_personal')->email()->label('Email cá nhân'),
 
                                 TextInput::make('date_of_birth')->label('Ngày sinh'),
-                                TextInput::make('place_of_birth')->label('Nơi sinh'),
-                                TextInput::make('address_1')->label('Địa chỉ 1'),
-                                TextInput::make('address_2')->label('Địa chỉ 2'),
+                                TextInput::make('address')
+                                    ->label('Địa chỉ')
+                                    ->columnSpanFull(),
 
                                 RichEditor::make('family_info')->label('Thông tin gia đình')->columnSpanFull(),
                                 RichEditor::make('burning_desire')->label('Khát vọng cháy bỏng')->columnSpanFull(),
@@ -121,7 +121,7 @@ class GainsProfileForm
 
                                 SpatieMediaLibraryFileUpload::make('product_gallery_1')
                                     ->collection('product_gallery_1')
-                                    ->label('Gallery Sản phẩm 1')
+                                    ->label('Album/Sản phẩm 1')
                                     ->multiple()
                                     ->image()
                                     ->imageEditor()
@@ -130,7 +130,7 @@ class GainsProfileForm
                                     ->columnSpanFull(),
                                 SpatieMediaLibraryFileUpload::make('product_gallery_2')
                                     ->collection('product_gallery_2')
-                                    ->label('Gallery Sản phẩm 2')
+                                    ->label('Album/Sản phẩm 2')
                                     ->multiple()
                                     ->image()
                                     ->imageEditor()
@@ -139,7 +139,7 @@ class GainsProfileForm
                                     ->columnSpanFull(),
                                 SpatieMediaLibraryFileUpload::make('product_gallery_3')
                                     ->collection('product_gallery_3')
-                                    ->label('Gallery Sản phẩm 3')
+                                    ->label('Album/Sản phẩm 3')
                                     ->multiple()
                                     ->image()
                                     ->imageEditor()
