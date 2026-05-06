@@ -11,12 +11,11 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\HtmlString;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use App\Imports\GainsProfilesImport;
 use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Storage;
-use Maatwebsite\Excel\Facades\Excel;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use App\Jobs\ImportGainsProfilesJob;
 class GainsProfilesTable
 {
     public static function configure(Table $table): Table
@@ -114,31 +113,21 @@ class GainsProfilesTable
                 ->default(true),
         ])
         ->action(function (array $data): void {
-            $path = Storage::disk('local')->path($data['file']);
+            $relativePath = is_array($data['file']) ? reset($data['file']) : $data['file'];
 
-            $import = new GainsProfilesImport(
-                updateExisting: (bool) ($data['update_existing'] ?? true),
-                importDriveImages: (bool) ($data['import_drive_images'] ?? true),
-            );
+$path = Storage::disk('local')->path($relativePath);
 
-            Excel::import($import, $path);
+ImportGainsProfilesJob::dispatch(
+    path: $path,
+    updateExisting: (bool) ($data['update_existing'] ?? true),
+    importDriveImages: (bool) ($data['import_drive_images'] ?? true),
+);
 
-            $stats = $import->stats();
-
-            $body = <<<HTML
-Tổng dòng: {$stats['total']}<br>
-Tạo mới: {$stats['created']}<br>
-Cập nhật: {$stats['updated']}<br>
-Trùng bỏ qua: {$stats['duplicates']}<br>
-Lỗi: {$stats['errors']}<br>
-Thành công: {$stats['success']}
-HTML;
-
-            Notification::make()
-                ->title('Import hoàn tất')
-                ->body($body)
-                ->success()
-                ->send();
+Notification::make()
+    ->title('Đã đưa file vào hàng đợi import')
+    ->body('Hệ thống sẽ xử lý import ở nền. Anh có thể tải lại trang sau vài phút để kiểm tra kết quả.')
+    ->success()
+    ->send();
         }),
 
     BulkActionGroup::make([
