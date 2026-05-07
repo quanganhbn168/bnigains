@@ -13,9 +13,9 @@ use Illuminate\Support\HtmlString;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
-use Illuminate\Support\Facades\Storage;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use App\Jobs\ImportGainsProfilesJob;
+
 class GainsProfilesTable
 {
     public static function configure(Table $table): Table
@@ -62,55 +62,53 @@ class GainsProfilesTable
                 EditAction::make(),
             ])
             ->toolbarActions([
-    Action::make('importGainsProfiles')
-        ->label('Import Excel')
-        ->icon('heroicon-o-arrow-up-tray')
-        ->color('primary')
-        ->modalHeading('Import hồ sơ GAINS từ Excel')
-        ->form([
-            FileUpload::make('file')
-                ->label('File Excel')
-                ->acceptedFileTypes([
-                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                    'application/vnd.ms-excel',
-                    'text/csv',
-                ])
-                ->directory('imports/gains-profiles')
-                ->disk('local')
-                ->required(),
+                Action::make('importGainsProfiles')
+                    ->label('Import Excel')
+                    ->icon('heroicon-o-arrow-up-tray')
+                    ->color('primary')
+                    ->modalHeading('Import hồ sơ GAINS từ Excel')
+                    ->form([
+                        FileUpload::make('file')
+                            ->label('File Excel')
+                            ->acceptedFileTypes([
+                                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                                'application/vnd.ms-excel',
+                                'text/csv',
+                            ])
+                            ->directory('imports/gains-profiles')
+                            ->disk('local')
+                            ->required(),
 
-            \Filament\Forms\Components\Toggle::make('update_existing')
-                ->label('Cập nhật hồ sơ đã tồn tại')
-                ->helperText('Nếu bật, hệ thống sẽ bổ sung/cập nhật dữ liệu theo email hoặc số điện thoại.')
-                ->default(true),
+                        \Filament\Forms\Components\Toggle::make('update_existing')
+                            ->label('Cập nhật hồ sơ đã tồn tại')
+                            ->helperText('Nếu bật, hệ thống sẽ bổ sung/cập nhật dữ liệu theo email hoặc số điện thoại.')
+                            ->default(true),
 
-            \Filament\Forms\Components\Toggle::make('import_drive_images')
-                ->label('Import ảnh từ Google Drive')
-                ->helperText('Nếu bật, hệ thống sẽ tải ảnh Drive vào Media Library.')
-                ->default(true),
-        ])
-        ->action(function (array $data): void {
-            $relativePath = is_array($data['file']) ? reset($data['file']) : $data['file'];
+                        \Filament\Forms\Components\Toggle::make('import_drive_images')
+                            ->label('Import ảnh từ Google Drive')
+                            ->helperText('Nếu bật, hệ thống sẽ tải ảnh Drive vào Media Library.')
+                            ->default(true),
+                    ])
+                    ->action(function (array $data): void {
+                        $relativePath = is_array($data['file']) ? reset($data['file']) : $data['file'];
 
-$path = Storage::disk('local')->path($relativePath);
+                        ImportGainsProfilesJob::dispatch(
+                            path: $relativePath,
+                            updateExisting: (bool) ($data['update_existing'] ?? true),
+                            importDriveImages: (bool) ($data['import_drive_images'] ?? true),
+                        );
 
-ImportGainsProfilesJob::dispatch(
-    path: $path,
-    updateExisting: (bool) ($data['update_existing'] ?? true),
-    importDriveImages: (bool) ($data['import_drive_images'] ?? true),
-);
+                        Notification::make()
+                            ->title('Đã đưa file vào hàng đợi import')
+                            ->body('Hệ thống sẽ xử lý import ở nền. Anh có thể tải lại trang sau vài phút để kiểm tra kết quả.')
+                            ->success()
+                            ->send();
+                    }),
 
-Notification::make()
-    ->title('Đã đưa file vào hàng đợi import')
-    ->body('Hệ thống sẽ xử lý import ở nền. Anh có thể tải lại trang sau vài phút để kiểm tra kết quả.')
-    ->success()
-    ->send();
-        }),
-
-    BulkActionGroup::make([
-        DeleteBulkAction::make()
-            ->visible(fn (): bool => GainsProfileResource::canDeleteAny()),
-    ]),
-]);
+                BulkActionGroup::make([
+                    DeleteBulkAction::make()
+                        ->visible(fn (): bool => GainsProfileResource::canDeleteAny()),
+                ]),
+            ]);
     }
 }
