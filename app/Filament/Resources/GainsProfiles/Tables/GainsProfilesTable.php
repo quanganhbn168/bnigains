@@ -41,9 +41,6 @@ class GainsProfilesTable
                     ->openUrlInNewTab()
                     ->color('primary')
                     ->searchable(),
-                TextColumn::make('company_name')
-                    ->label('Công ty')
-                    ->searchable(),
             ])
             ->filters([
                 //
