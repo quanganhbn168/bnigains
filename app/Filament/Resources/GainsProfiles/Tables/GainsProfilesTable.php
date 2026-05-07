@@ -27,15 +27,6 @@ class GainsProfilesTable
                 TextColumn::make('full_name')
                     ->label('Họ và tên')
                     ->searchable(),
-                TextColumn::make('user.username')
-                    ->label('Tài khoản')
-                    ->placeholder('-')
-                    ->searchable(),
-                TextColumn::make('user.email')
-                    ->label('Email đăng nhập')
-                    ->placeholder('-')
-                    ->searchable()
-                    ->toggleable(),
                 TextColumn::make('chapter_name')
                     ->label('Tên Chapter')
                     ->searchable(),
@@ -53,17 +44,6 @@ class GainsProfilesTable
                 TextColumn::make('company_name')
                     ->label('Công ty')
                     ->searchable(),
-                TextColumn::make('job_title')
-                    ->label('Chức danh')
-                    ->searchable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
