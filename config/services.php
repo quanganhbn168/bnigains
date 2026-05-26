@@ -26,6 +26,10 @@ return [
         'webhook_secret' => env('GOOGLE_FORM_WEBHOOK_SECRET'),
     ],
 
+    'google_sheets' => [
+        'gains_profiles_url' => env('GOOGLE_SHEETS_GAINS_PROFILES_URL'),
+    ],
+
     'ses' => [
         'key' => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),

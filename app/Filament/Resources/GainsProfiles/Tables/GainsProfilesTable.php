@@ -3,18 +3,21 @@
 namespace App\Filament\Resources\GainsProfiles\Tables;
 
 use App\Filament\Resources\GainsProfiles\GainsProfileResource;
+use App\Jobs\ImportGainsProfilesFromGoogleSheetJob;
+use App\Jobs\ImportGainsProfilesJob;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\HtmlString;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use Filament\Forms\Components\FileUpload;
-use Filament\Notifications\Notification;
-use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
-use App\Jobs\ImportGainsProfilesJob;
 
 class GainsProfilesTable
 {
@@ -79,12 +82,12 @@ class GainsProfilesTable
                             ->disk('local')
                             ->required(),
 
-                        \Filament\Forms\Components\Toggle::make('update_existing')
+                        Toggle::make('update_existing')
                             ->label('Cập nhật hồ sơ đã tồn tại')
                             ->helperText('Nếu bật, hệ thống sẽ bổ sung/cập nhật dữ liệu theo email hoặc số điện thoại.')
                             ->default(true),
 
-                        \Filament\Forms\Components\Toggle::make('import_drive_images')
+                        Toggle::make('import_drive_images')
                             ->label('Import ảnh từ Google Drive')
                             ->helperText('Nếu bật, hệ thống sẽ tải ảnh Drive vào Media Library.')
                             ->default(true),
@@ -104,7 +107,44 @@ class GainsProfilesTable
                             ->success()
                             ->send();
                     }),
+                Action::make('sync')
+                    ->label('Đồng bộ Google Sheet')
+                    ->icon('heroicon-o-link')
+                    ->color('gray')
+                    ->modalHeading('Đồng bộ hồ sơ GAINS từ Google Sheet')
+                    ->form([
+                        TextInput::make('sheet_url')
+                            ->label('Link Google Sheet')
+                            ->placeholder('https://docs.google.com/spreadsheets/d/.../edit#gid=0')
+                            ->helperText('Sheet cần được chia sẻ public hoặc publish/export CSV để hệ thống tải được dữ liệu.')
+                            ->default((string) config('services.google_sheets.gains_profiles_url'))
+                            ->url()
+                            ->required()
+                            ->columnSpanFull(),
 
+                        Toggle::make('update_existing')
+                            ->label('Cập nhật hồ sơ đã tồn tại')
+                            ->helperText('Nếu bật, hệ thống sẽ bổ sung/cập nhật dữ liệu theo email hoặc số điện thoại.')
+                            ->default(true),
+
+                        Toggle::make('import_drive_images')
+                            ->label('Import ảnh từ Google Drive')
+                            ->helperText('Nếu bật, hệ thống sẽ tải ảnh Drive vào Media Library.')
+                            ->default(true),
+                    ])
+                    ->action(function (array $data): void {
+                        ImportGainsProfilesFromGoogleSheetJob::dispatch(
+                            sheetUrl: (string) $data['sheet_url'],
+                            updateExisting: (bool) ($data['update_existing'] ?? true),
+                            importDriveImages: (bool) ($data['import_drive_images'] ?? true),
+                        );
+
+                        Notification::make()
+                            ->title('Đã đưa Google Sheet vào hàng đợi đồng bộ')
+                            ->body('Worker queue sẽ tải sheet và import dữ liệu ở nền. Anh có thể tải lại trang sau vài phút để kiểm tra kết quả.')
+                            ->success()
+                            ->send();
+                    }),
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
                         ->visible(fn (): bool => GainsProfileResource::canDeleteAny()),
