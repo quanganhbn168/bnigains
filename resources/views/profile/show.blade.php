@@ -117,15 +117,18 @@
                 <!-- 2. ẢNH DỌC/NGANG CHIA SECTION -->
                 <div id="album-ca-nhan" class="w-full mt-10 mb-6">
                     @if(!empty($personalPhotoUrls))
-                        <swiper-container pagination="true" pagination-clickable="true" loop="true" autoplay-delay="2500" class="w-full">
-                            @foreach($personalPhotoUrls as $idx => $photoUrl)
-                                <swiper-slide>
-                                    <img src="{{ $photoUrl }}" class="w-full aspect-[4/3] object-contain shadow-inner" alt="Album cá nhân {{ $idx + 1 }}">
-                                </swiper-slide>
-                            @endforeach
-                        </swiper-container>
+                    <swiper-container pagination="true" pagination-clickable="true" loop="true" autoplay-delay="2500" class="w-full">
+                        @foreach($personalPhotoUrls as $idx => $photoUrl)
+                        <!-- Thêm flex, căn giữa và màu nền cho slide -->
+                        <swiper-slide class="flex items-center justify-center bg-gray-900 h-[450px]">
+                            <!-- Xóa aspect-[4/3], đổi w-full thành w-auto, h-full và object-contain -->
+                            <img src="{{ $photoUrl }}" class="w-auto h-full max-w-full object-contain shadow-inner" alt="Album cá nhân {{ $idx + 1 }}">
+                        </swiper-slide>
+                        @endforeach
+                    </swiper-container>
                     @endif
                 </div>
+
 
 
 
