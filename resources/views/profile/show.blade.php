@@ -120,7 +120,7 @@
                         <swiper-container pagination="true" pagination-clickable="true" loop="true" autoplay-delay="2500" class="w-full">
                             @foreach($personalPhotoUrls as $idx => $photoUrl)
                                 <swiper-slide>
-                                    <img src="{{ $photoUrl }}" class="w-full aspect-[4/3] object-cover shadow-inner" alt="Album cá nhân {{ $idx + 1 }}">
+                                    <img src="{{ $photoUrl }}" class="w-full aspect-[4/3] object-contain shadow-inner" alt="Album cá nhân {{ $idx + 1 }}">
                                 </swiper-slide>
                             @endforeach
                         </swiper-container>

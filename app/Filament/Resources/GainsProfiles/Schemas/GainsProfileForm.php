@@ -14,11 +14,40 @@ use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Throwable;
 
 class GainsProfileForm
 {
+    public const RICH_EDITOR_FIELDS = [
+        'family_info',
+        'burning_desire',
+        'unknown_fact',
+        'success_key',
+        'qualifications',
+        'core_products',
+        'accompanying_services',
+        'highlight_products',
+        'g_goals',
+        'a_accomplishments',
+        'i_interests',
+        'n_networks',
+        's_skills',
+        'ideal_referral',
+        'connection_wishes',
+        'bni_commitment',
+        'product_description',
+        'competitive_advantage',
+        'target_market',
+        'connection_fields',
+        'conversation_starters',
+        'trigger_phrases',
+        'good_referral',
+        'bad_referral',
+        'misconceptions',
+    ];
+
     public static function configure(Schema $schema): Schema
     {
         return $schema
@@ -340,6 +369,46 @@ class GainsProfileForm
                     ])
                     ->columnSpanFull(),
             ]);
+    }
+
+    public static function normalizeRichEditorDataForFill(array $data): array
+    {
+        foreach (self::RICH_EDITOR_FIELDS as $field) {
+            if (! array_key_exists($field, $data)) {
+                continue;
+            }
+
+            $data[$field] = self::normalizeRichEditorValueForFill($data[$field]);
+        }
+
+        return $data;
+    }
+
+    public static function normalizeRichEditorValueForFill(mixed $value): mixed
+    {
+        if (! is_string($value) || trim($value) === '') {
+            return $value;
+        }
+
+        try {
+            $decoded = json_decode($value, true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException) {
+            return $value;
+        }
+
+        if (static::isTipTapDocument($decoded)) {
+            return $value;
+        }
+
+        return '<p>' . e($value) . '</p>';
+    }
+
+    protected static function isTipTapDocument(mixed $value): bool
+    {
+        return is_array($value)
+            && (($value['type'] ?? null) === 'doc')
+            && array_key_exists('content', $value)
+            && is_array($value['content']);
     }
 
     protected static function getPersonalPhotoOptions(?GainsProfile $record): array

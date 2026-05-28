@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\GainsProfiles\Pages;
 
 use App\Filament\Resources\GainsProfiles\GainsProfileResource;
+use App\Filament\Resources\GainsProfiles\Schemas\GainsProfileForm;
 use App\Models\User;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
@@ -40,6 +41,8 @@ class EditGainsProfile extends EditRecord
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
+        $data = GainsProfileForm::normalizeRichEditorDataForFill($data);
+
         $user = User::find($data['user_id']);
         if ($user) {
             $data['user_email'] = $user->email;
