@@ -191,8 +191,8 @@
 
                     <swiper-container pagination="true" pagination-clickable="true" loop="true" autoplay-delay="2500" class="w-full">
                         @foreach($businessPhotoUrls as $idx => $photoUrl)
-                            <swiper-slide>
-                                <img src="{{ $photoUrl }}" class="w-full aspect-[4/3] object-cover" alt="Ảnh doanh nghiệp {{ $idx + 1 }}">
+                            <swiper-slide class="flex items-center justify-center bg-gray-900 h-[450px]">
+                                <img src="{{ $photoUrl }}" class="w-auto h-full max-w-full object-contain shadow-inner" alt="Ảnh doanh nghiệp {{ $idx + 1 }}">
                             </swiper-slide>
                         @endforeach
                     </swiper-container>
@@ -205,8 +205,8 @@
                     <div class="w-full max-w-[440px] mx-auto mb-10 overflow-hidden rounded-xl shadow-md border border-gray-100 relative">
                         <swiper-container pagination="true" pagination-clickable="true" loop="true" autoplay-delay="3000" class="w-full">
                             @foreach($activityPhotoUrls as $idx => $photoUrl)
-                                <swiper-slide>
-                                    <img src="{{ $photoUrl }}" class="w-full aspect-[4/3] object-cover" alt="Ảnh hoạt động {{ $idx + 1 }}">
+                                <swiper-slide class="flex items-center justify-center bg-gray-900 h-[450px]">
+                                    <img src="{{ $photoUrl }}" class="w-auto h-full max-w-full object-contain shadow-inner" alt="Ảnh hoạt động {{ $idx + 1 }}">
                                 </swiper-slide>
                             @endforeach
                         </swiper-container>
@@ -252,8 +252,8 @@
                     </div>
                     <swiper-container pagination="true" pagination-clickable="true" loop="true" autoplay-delay="3000" class="w-full">
                         @foreach($productGallery1Urls as $idx => $img)
-                            <swiper-slide>
-                                <img src="{{ $img }}" class="w-full aspect-[4/3] object-cover" alt="Gallery sản phẩm 1 - {{ $idx + 1 }}">
+                            <swiper-slide class="flex items-center justify-center bg-gray-900 h-[450px]">
+                                <img src="{{ $img }}" class="w-auto h-full max-w-full object-contain shadow-inner" alt="Gallery sản phẩm 1 - {{ $idx + 1 }}">
                             </swiper-slide>
                         @endforeach
                     </swiper-container>
@@ -275,8 +275,8 @@
                     </div>
                     <swiper-container pagination="true" pagination-clickable="true" loop="true" autoplay-delay="3000" class="w-full">
                         @foreach($productGallery2Urls as $idx => $img)
-                            <swiper-slide>
-                                <img src="{{ $img }}" class="w-full aspect-[4/3] object-cover" alt="Gallery dịch vụ - {{ $idx + 1 }}">
+                            <swiper-slide class="flex items-center justify-center bg-gray-900 h-[450px]">
+                                <img src="{{ $img }}" class="w-auto h-full max-w-full object-contain shadow-inner" alt="Gallery dịch vụ - {{ $idx + 1 }}">
                             </swiper-slide>
                         @endforeach
                     </swiper-container>
@@ -298,8 +298,8 @@
                     </div>
                     <swiper-container pagination="true" pagination-clickable="true" loop="true" autoplay-delay="3000" class="w-full">
                         @foreach($productGallery3Urls as $idx => $img)
-                            <swiper-slide>
-                                <img src="{{ $img }}" class="w-full aspect-[4/3] object-cover" alt="Gallery sản phẩm - {{ $idx + 1 }}">
+                            <swiper-slide class="flex items-center justify-center bg-gray-900 h-[450px]">
+                                <img src="{{ $img }}" class="w-auto h-full max-w-full object-contain shadow-inner" alt="Gallery sản phẩm - {{ $idx + 1 }}">
                             </swiper-slide>
                         @endforeach
                     </swiper-container>
